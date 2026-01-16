@@ -36,6 +36,7 @@ import { Route as DashboardLayoutTelecallerAnalyticsIndexImport } from './routes
 import { Route as DashboardLayoutStatusIndexImport } from './routes/_dashboardLayout/status/index'
 import { Route as DashboardLayoutSourceIndexImport } from './routes/_dashboardLayout/source/index'
 import { Route as DashboardLayoutReportIndexImport } from './routes/_dashboardLayout/report/index'
+import { Route as DashboardLayoutMissedFollowupIndexImport } from './routes/_dashboardLayout/missedFollowup/index'
 import { Route as DashboardLayoutLeadIndexImport } from './routes/_dashboardLayout/lead/index'
 import { Route as DashboardLayoutLabelIndexImport } from './routes/_dashboardLayout/label/index'
 import { Route as DashboardLayoutGeneralTemplatesIndexImport } from './routes/_dashboardLayout/general-templates/index'
@@ -51,6 +52,7 @@ import { Route as DashboardLayoutReportSlugImport } from './routes/_dashboardLay
 import { Route as AuthLayoutAdminLoginImport } from './routes/_authLayout/admin/login'
 import { Route as MasterLayoutMasterpannelWorkspaceIndexImport } from './routes/_masterLayout/masterpannel/workspace/index'
 import { Route as MasterLayoutMasterpannelUsersIndexImport } from './routes/_masterLayout/masterpannel/users/index'
+import { Route as MasterLayoutMasterpannelPackagesIndexImport } from './routes/_masterLayout/masterpannel/packages/index'
 import { Route as MasterLayoutMasterpannelClientIndexImport } from './routes/_masterLayout/masterpannel/client/index'
 import { Route as MasterLayoutMasterpannelCampaignsIndexImport } from './routes/_masterLayout/masterpannel/campaigns/index'
 import { Route as MasterLayoutMasterpannelAddonsIndexImport } from './routes/_masterLayout/masterpannel/addons/index'
@@ -222,6 +224,13 @@ const DashboardLayoutReportIndexRoute = DashboardLayoutReportIndexImport.update(
   } as any,
 )
 
+const DashboardLayoutMissedFollowupIndexRoute =
+  DashboardLayoutMissedFollowupIndexImport.update({
+    id: '/missedFollowup/',
+    path: '/missedFollowup/',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
+
 const DashboardLayoutLeadIndexRoute = DashboardLayoutLeadIndexImport.update({
   id: '/',
   path: '/',
@@ -317,6 +326,13 @@ const MasterLayoutMasterpannelUsersIndexRoute =
   MasterLayoutMasterpannelUsersIndexImport.update({
     id: '/masterpannel/users/',
     path: '/masterpannel/users/',
+    getParentRoute: () => MasterLayoutRoute,
+  } as any)
+
+const MasterLayoutMasterpannelPackagesIndexRoute =
+  MasterLayoutMasterpannelPackagesIndexImport.update({
+    id: '/masterpannel/packages/',
+    path: '/masterpannel/packages/',
     getParentRoute: () => MasterLayoutRoute,
   } as any)
 
@@ -541,6 +557,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardLayoutLeadIndexImport
       parentRoute: typeof DashboardLayoutLeadRouteImport
     }
+    '/_dashboardLayout/missedFollowup/': {
+      id: '/_dashboardLayout/missedFollowup/'
+      path: '/missedFollowup'
+      fullPath: '/missedFollowup'
+      preLoaderRoute: typeof DashboardLayoutMissedFollowupIndexImport
+      parentRoute: typeof DashboardLayoutImport
+    }
     '/_dashboardLayout/report/': {
       id: '/_dashboardLayout/report/'
       path: '/report'
@@ -667,6 +690,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MasterLayoutMasterpannelClientIndexImport
       parentRoute: typeof MasterLayoutImport
     }
+    '/_masterLayout/masterpannel/packages/': {
+      id: '/_masterLayout/masterpannel/packages/'
+      path: '/masterpannel/packages'
+      fullPath: '/masterpannel/packages'
+      preLoaderRoute: typeof MasterLayoutMasterpannelPackagesIndexImport
+      parentRoute: typeof MasterLayoutImport
+    }
     '/_masterLayout/masterpannel/users/': {
       id: '/_masterLayout/masterpannel/users/'
       path: '/masterpannel/users'
@@ -760,6 +790,7 @@ interface DashboardLayoutRouteChildren {
   DashboardLayoutDashboardIndexRoute: typeof DashboardLayoutDashboardIndexRoute
   DashboardLayoutGeneralTemplatesIndexRoute: typeof DashboardLayoutGeneralTemplatesIndexRoute
   DashboardLayoutLabelIndexRoute: typeof DashboardLayoutLabelIndexRoute
+  DashboardLayoutMissedFollowupIndexRoute: typeof DashboardLayoutMissedFollowupIndexRoute
   DashboardLayoutReportIndexRoute: typeof DashboardLayoutReportIndexRoute
   DashboardLayoutSourceIndexRoute: typeof DashboardLayoutSourceIndexRoute
   DashboardLayoutStatusIndexRoute: typeof DashboardLayoutStatusIndexRoute
@@ -787,6 +818,8 @@ const DashboardLayoutRouteChildren: DashboardLayoutRouteChildren = {
   DashboardLayoutGeneralTemplatesIndexRoute:
     DashboardLayoutGeneralTemplatesIndexRoute,
   DashboardLayoutLabelIndexRoute: DashboardLayoutLabelIndexRoute,
+  DashboardLayoutMissedFollowupIndexRoute:
+    DashboardLayoutMissedFollowupIndexRoute,
   DashboardLayoutReportIndexRoute: DashboardLayoutReportIndexRoute,
   DashboardLayoutSourceIndexRoute: DashboardLayoutSourceIndexRoute,
   DashboardLayoutStatusIndexRoute: DashboardLayoutStatusIndexRoute,
@@ -823,6 +856,7 @@ interface MasterLayoutRouteChildren {
   MasterLayoutMasterpannelAddonsIndexRoute: typeof MasterLayoutMasterpannelAddonsIndexRoute
   MasterLayoutMasterpannelCampaignsIndexRoute: typeof MasterLayoutMasterpannelCampaignsIndexRoute
   MasterLayoutMasterpannelClientIndexRoute: typeof MasterLayoutMasterpannelClientIndexRoute
+  MasterLayoutMasterpannelPackagesIndexRoute: typeof MasterLayoutMasterpannelPackagesIndexRoute
   MasterLayoutMasterpannelUsersIndexRoute: typeof MasterLayoutMasterpannelUsersIndexRoute
   MasterLayoutMasterpannelWorkspaceIndexRoute: typeof MasterLayoutMasterpannelWorkspaceIndexRoute
 }
@@ -835,6 +869,8 @@ const MasterLayoutRouteChildren: MasterLayoutRouteChildren = {
     MasterLayoutMasterpannelCampaignsIndexRoute,
   MasterLayoutMasterpannelClientIndexRoute:
     MasterLayoutMasterpannelClientIndexRoute,
+  MasterLayoutMasterpannelPackagesIndexRoute:
+    MasterLayoutMasterpannelPackagesIndexRoute,
   MasterLayoutMasterpannelUsersIndexRoute:
     MasterLayoutMasterpannelUsersIndexRoute,
   MasterLayoutMasterpannelWorkspaceIndexRoute:
@@ -868,6 +904,7 @@ export interface FileRoutesByFullPath {
   '/general-templates': typeof DashboardLayoutGeneralTemplatesIndexRoute
   '/label': typeof DashboardLayoutLabelIndexRoute
   '/lead/': typeof DashboardLayoutLeadIndexRoute
+  '/missedFollowup': typeof DashboardLayoutMissedFollowupIndexRoute
   '/report': typeof DashboardLayoutReportIndexRoute
   '/source': typeof DashboardLayoutSourceIndexRoute
   '/status': typeof DashboardLayoutStatusIndexRoute
@@ -886,6 +923,7 @@ export interface FileRoutesByFullPath {
   '/masterpannel/addons': typeof MasterLayoutMasterpannelAddonsIndexRoute
   '/masterpannel/campaigns': typeof MasterLayoutMasterpannelCampaignsIndexRoute
   '/masterpannel/client': typeof MasterLayoutMasterpannelClientIndexRoute
+  '/masterpannel/packages': typeof MasterLayoutMasterpannelPackagesIndexRoute
   '/masterpannel/users': typeof MasterLayoutMasterpannelUsersIndexRoute
   '/masterpannel/workspace': typeof MasterLayoutMasterpannelWorkspaceIndexRoute
   '/general-templates/lead-template/add-template': typeof DashboardLayoutGeneralTemplatesLeadTemplateAddTemplateIndexRoute
@@ -913,6 +951,7 @@ export interface FileRoutesByTo {
   '/general-templates': typeof DashboardLayoutGeneralTemplatesIndexRoute
   '/label': typeof DashboardLayoutLabelIndexRoute
   '/lead': typeof DashboardLayoutLeadIndexRoute
+  '/missedFollowup': typeof DashboardLayoutMissedFollowupIndexRoute
   '/report': typeof DashboardLayoutReportIndexRoute
   '/source': typeof DashboardLayoutSourceIndexRoute
   '/status': typeof DashboardLayoutStatusIndexRoute
@@ -931,6 +970,7 @@ export interface FileRoutesByTo {
   '/masterpannel/addons': typeof MasterLayoutMasterpannelAddonsIndexRoute
   '/masterpannel/campaigns': typeof MasterLayoutMasterpannelCampaignsIndexRoute
   '/masterpannel/client': typeof MasterLayoutMasterpannelClientIndexRoute
+  '/masterpannel/packages': typeof MasterLayoutMasterpannelPackagesIndexRoute
   '/masterpannel/users': typeof MasterLayoutMasterpannelUsersIndexRoute
   '/masterpannel/workspace': typeof MasterLayoutMasterpannelWorkspaceIndexRoute
   '/general-templates/lead-template/add-template': typeof DashboardLayoutGeneralTemplatesLeadTemplateAddTemplateIndexRoute
@@ -963,6 +1003,7 @@ export interface FileRoutesById {
   '/_dashboardLayout/general-templates/': typeof DashboardLayoutGeneralTemplatesIndexRoute
   '/_dashboardLayout/label/': typeof DashboardLayoutLabelIndexRoute
   '/_dashboardLayout/lead/': typeof DashboardLayoutLeadIndexRoute
+  '/_dashboardLayout/missedFollowup/': typeof DashboardLayoutMissedFollowupIndexRoute
   '/_dashboardLayout/report/': typeof DashboardLayoutReportIndexRoute
   '/_dashboardLayout/source/': typeof DashboardLayoutSourceIndexRoute
   '/_dashboardLayout/status/': typeof DashboardLayoutStatusIndexRoute
@@ -981,6 +1022,7 @@ export interface FileRoutesById {
   '/_masterLayout/masterpannel/addons/': typeof MasterLayoutMasterpannelAddonsIndexRoute
   '/_masterLayout/masterpannel/campaigns/': typeof MasterLayoutMasterpannelCampaignsIndexRoute
   '/_masterLayout/masterpannel/client/': typeof MasterLayoutMasterpannelClientIndexRoute
+  '/_masterLayout/masterpannel/packages/': typeof MasterLayoutMasterpannelPackagesIndexRoute
   '/_masterLayout/masterpannel/users/': typeof MasterLayoutMasterpannelUsersIndexRoute
   '/_masterLayout/masterpannel/workspace/': typeof MasterLayoutMasterpannelWorkspaceIndexRoute
   '/_dashboardLayout/general-templates/lead-template/add-template/': typeof DashboardLayoutGeneralTemplatesLeadTemplateAddTemplateIndexRoute
@@ -1011,6 +1053,7 @@ export interface FileRouteTypes {
     | '/general-templates'
     | '/label'
     | '/lead/'
+    | '/missedFollowup'
     | '/report'
     | '/source'
     | '/status'
@@ -1029,6 +1072,7 @@ export interface FileRouteTypes {
     | '/masterpannel/addons'
     | '/masterpannel/campaigns'
     | '/masterpannel/client'
+    | '/masterpannel/packages'
     | '/masterpannel/users'
     | '/masterpannel/workspace'
     | '/general-templates/lead-template/add-template'
@@ -1055,6 +1099,7 @@ export interface FileRouteTypes {
     | '/general-templates'
     | '/label'
     | '/lead'
+    | '/missedFollowup'
     | '/report'
     | '/source'
     | '/status'
@@ -1073,6 +1118,7 @@ export interface FileRouteTypes {
     | '/masterpannel/addons'
     | '/masterpannel/campaigns'
     | '/masterpannel/client'
+    | '/masterpannel/packages'
     | '/masterpannel/users'
     | '/masterpannel/workspace'
     | '/general-templates/lead-template/add-template'
@@ -1103,6 +1149,7 @@ export interface FileRouteTypes {
     | '/_dashboardLayout/general-templates/'
     | '/_dashboardLayout/label/'
     | '/_dashboardLayout/lead/'
+    | '/_dashboardLayout/missedFollowup/'
     | '/_dashboardLayout/report/'
     | '/_dashboardLayout/source/'
     | '/_dashboardLayout/status/'
@@ -1121,6 +1168,7 @@ export interface FileRouteTypes {
     | '/_masterLayout/masterpannel/addons/'
     | '/_masterLayout/masterpannel/campaigns/'
     | '/_masterLayout/masterpannel/client/'
+    | '/_masterLayout/masterpannel/packages/'
     | '/_masterLayout/masterpannel/users/'
     | '/_masterLayout/masterpannel/workspace/'
     | '/_dashboardLayout/general-templates/lead-template/add-template/'
@@ -1190,6 +1238,7 @@ export const routeTree = rootRoute
         "/_dashboardLayout/dashboard/",
         "/_dashboardLayout/general-templates/",
         "/_dashboardLayout/label/",
+        "/_dashboardLayout/missedFollowup/",
         "/_dashboardLayout/report/",
         "/_dashboardLayout/source/",
         "/_dashboardLayout/status/",
@@ -1214,6 +1263,7 @@ export const routeTree = rootRoute
         "/_masterLayout/masterpannel/addons/",
         "/_masterLayout/masterpannel/campaigns/",
         "/_masterLayout/masterpannel/client/",
+        "/_masterLayout/masterpannel/packages/",
         "/_masterLayout/masterpannel/users/",
         "/_masterLayout/masterpannel/workspace/"
       ]
@@ -1305,6 +1355,10 @@ export const routeTree = rootRoute
       "filePath": "_dashboardLayout/lead/index.tsx",
       "parent": "/_dashboardLayout/lead"
     },
+    "/_dashboardLayout/missedFollowup/": {
+      "filePath": "_dashboardLayout/missedFollowup/index.tsx",
+      "parent": "/_dashboardLayout"
+    },
     "/_dashboardLayout/report/": {
       "filePath": "_dashboardLayout/report/index.tsx",
       "parent": "/_dashboardLayout"
@@ -1375,6 +1429,10 @@ export const routeTree = rootRoute
     },
     "/_masterLayout/masterpannel/client/": {
       "filePath": "_masterLayout/masterpannel/client/index.tsx",
+      "parent": "/_masterLayout"
+    },
+    "/_masterLayout/masterpannel/packages/": {
+      "filePath": "_masterLayout/masterpannel/packages/index.tsx",
       "parent": "/_masterLayout"
     },
     "/_masterLayout/masterpannel/users/": {

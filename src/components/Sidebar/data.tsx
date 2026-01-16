@@ -53,6 +53,23 @@ export const navItems: NavItem[] = [
     path: "/masterpannel",
     roles: ["Masteradmin"],
   },
+
+  {
+    name: "Follow Ups",
+    icon: <Plug size={20} />,
+    roles: ["Telecaller", "Superadmin"],
+    subItems: [
+      { name: "Missed Follow Ups", path: "/missedfollowup" },
+      { name: "Todays Follow Ups", path: "/todaysfollowup" },
+    ],
+  },
+
+  // {
+  //   name: "Todays FollowUps",
+  //   icon: <House size={20} />,
+  //   path: "/todaysfollowup",
+  //   roles: ["Telecaller"],
+  // },
   {
     name: "Clients",
     icon: <House size={20} />,
@@ -63,6 +80,13 @@ export const navItems: NavItem[] = [
     name: "Users",
     icon: <House size={20} />,
     path: "/masterpannel/users",
+    roles: ["Masteradmin"],
+  },
+
+  {
+    name: "Packages",
+    icon: <House size={20} />,
+    path: "/masterpannel/packages",
     roles: ["Masteradmin"],
   },
   {

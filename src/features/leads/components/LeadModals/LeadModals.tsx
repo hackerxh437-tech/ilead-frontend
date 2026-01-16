@@ -66,6 +66,7 @@ import { useAssignLeadToChatAgent } from "../../hooks/useAssignLeadToChatAgent";
 import { useConvertLeadToCustomer } from "../../hooks/useConvertLeadToCustomer";
 import { useUpdateLeadStatus } from "../../hooks/useUpdateLeadStatus";
 import { getCardActions } from "@/utils/cardActions";
+import { queryClient } from "@/utils/client";
 
 const leadsApi = new LeadsModule();
 
@@ -552,6 +553,7 @@ export function LeadFollowUp() {
     followUpDate.setHours(Number(hours), Number(minutes));
 
     setIsSubmitting(true);
+
     try {
       if (isEditMode) {
         await leadsApi.updateFollowup({
@@ -562,6 +564,8 @@ export function LeadFollowUp() {
           attachmentUrl,
           audioAttachmentUrl,
         });
+        queryClient.invalidateQueries({ queryKey: ["leads"] });
+        queryClient.invalidateQueries({ queryKey: ["leads:infinite"] });
       } else {
         await leadsApi.createNewFollowup({
           leadId,
@@ -570,6 +574,8 @@ export function LeadFollowUp() {
           attachmentUrl,
           audioAttachmentUrl,
         });
+        queryClient.invalidateQueries({ queryKey: ["leads"] });
+        queryClient.invalidateQueries({ queryKey: ["leads:infinite"] });
       }
 
       console.warn("payload", {
@@ -1299,15 +1305,15 @@ export function LeadDetail() {
                 .map((log: any, index: number) => (
                   <li
                     key={log._id || index}
-                    className="border border-gray-700 rounded p-4 bg-background text-white"
+                    className="border border-gray-700 rounded p-4 bg-background text-foreground"
                   >
                     <div className="flex justify-between items-center mb-2">
                       <h4 className="font-semibold text-base">{log.title}</h4>
-                      <span className="text-xs text-gray-400">
+                      <span className="text-xs text-foreground">
                         {new Date(log.createdAt).toLocaleString()}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-300">{log.description}</p>
+                    <p className="text-sm text-foreground">{log.description}</p>
                   </li>
                 ))}
             </ul>

@@ -1,4 +1,6 @@
 import Header from "@/components/Header";
+import "../index.css";
+
 import { SidebarMenuItem } from "@/components/Sidebar/data";
 import Sidebar, { filteredNavItems } from "@/components/Sidebar/Sidebar";
 import { useTheme } from "@/contexts/ThemeProvider";
@@ -11,6 +13,8 @@ import { useEffect } from "react";
 import { useModalStore } from "@/store/useModalStore";
 import FollowUp from "@/features/dashboard/components/FollowUp";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/features/auth/hooks/useUser";
+
 
 export const Route = createFileRoute("/_dashboardLayout")({
   beforeLoad: async ({ context }) => {
@@ -28,6 +32,8 @@ export const Route = createFileRoute("/_dashboardLayout")({
 });
 
 function RouteComponent() {
+  const { data } = useUser();
+  console.log(data?.role);
   const { mobileOpen, setMobileOpen } = useSidebarStore();
   const { theme } = useTheme();
   const { openModal, setModalTitle, setModalSize, closeModal } =
@@ -35,6 +41,12 @@ function RouteComponent() {
   console.log(filteredNavItems);
 
   useEffect(() => {
+    // 🚫 Masteradmin ko koi follow-up modal nahi
+    if (data?.role === "Masteradmin") {
+      window.location.href = "/masterpannel";
+      return;
+    }
+
     let start = performance.now();
     let rafId: number;
 
@@ -42,12 +54,11 @@ function RouteComponent() {
       const elapsed = now - start;
 
       if (elapsed >= 5 * 60 * 1000) {
-        // 2 min ho gaye
         setModalSize?.("lg");
-        setModalTitle?.("Missed Follow ups ");
+        setModalTitle?.("Missed Follow ups");
         openModal?.({
           content: (
-            <div className="mx-3 border-1 border-gray-600  overflow-hidden">
+            <div className="mx-3 border-1 border-gray-600 overflow-hidden">
               <FollowUp />
             </div>
           ),
@@ -59,8 +70,7 @@ function RouteComponent() {
           ),
         });
 
-        // reset timer
-        start = now;
+        start = now; // reset timer
       }
 
       rafId = requestAnimationFrame(tick);
@@ -68,8 +78,8 @@ function RouteComponent() {
 
     rafId = requestAnimationFrame(tick);
 
-    return () => cancelAnimationFrame(rafId); // cleanup
-  }, []);
+    return () => cancelAnimationFrame(rafId);
+  }, [data?.role]);
 
   return (
     <div className="dashboard_layout">

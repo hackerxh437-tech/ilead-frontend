@@ -13,6 +13,7 @@ interface LeadsBoardProps {
   onFetchNextPage?: () => void;
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
+  // pagination?: Pagination;
 }
 
 export const LeadsBoard = memo(
@@ -23,6 +24,7 @@ export const LeadsBoard = memo(
     onFetchNextPage,
     hasNextPage = false,
     isFetchingNextPage = false,
+    // pagination,
   }: LeadsBoardProps) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);

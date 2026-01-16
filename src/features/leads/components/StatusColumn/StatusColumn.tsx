@@ -1,5 +1,6 @@
+// StatusColumn.tsx - With missed follow-up count
 "use client";
-import { memo, useEffect, useRef } from "react";
+import { memo, useCallback, useEffect, useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type { Lead, Status } from "@/features/leads/types";
 import LeadCard from "../LeadCard";
@@ -23,63 +24,75 @@ export const StatusColumn = memo(
     hasMore = false,
     isLoadingMore = false,
   }: StatusColumnProps) => {
-    // Filter leads that belong to this status
     const statusLeads = leads.filter((lead) => lead.status._id === status._id);
     const { missedFollowUps } = useMissedFollowUps();
     const scrollRef = useRef<HTMLDivElement>(null);
+    const loadMoreCalledRef = useRef(false);
 
-    // Convert status title to string to ensure safe rendering
     const statusTitle = String(status.title);
 
+    // Create updated leads with missed follow-up information
     const updatedLeads = leads?.map((lead) => {
-      const hasMissed = missedFollowUps.data.some(
+      const missedData = missedFollowUps.data.find(
         (item) => item.leadId === lead._id
       );
+
+      const hasMissed = !!missedData;
+      const missedCount = missedData?.meta?.missed_followups_count?.[0]?.days|| 0;
+
       return {
         ...lead,
         missedFollowup: hasMissed,
-        count: 0,
+        missedCount: missedCount,
       };
     });
 
     const rowVirtualizer = useVirtualizer({
       count: hasMore ? statusLeads.length + 1 : statusLeads.length,
       getScrollElement: () => scrollRef.current,
-      estimateSize: () => 230, // increased from 170 to 190 to properly account for card height + margin
-      overscan: 3,
+      estimateSize: () => 250,
+      overscan: 2,
     });
 
-    useEffect(() => {
-      const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
-      if (!lastItem) return;
+    const handleScroll = useCallback(() => {
+      const container = scrollRef.current;
+      if (!container) return;
+
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const scrolledToBottom = scrollHeight - scrollTop - clientHeight < 50;
 
       if (
-        lastItem.index >= statusLeads.length - 1 &&
+        scrolledToBottom &&
         hasMore &&
         !isLoadingMore &&
+        !loadMoreCalledRef.current &&
         onLoadMore
       ) {
+        loadMoreCalledRef.current = true;
         onLoadMore();
       }
-    }, [
-      hasMore,
-      onLoadMore,
-      statusLeads.length,
-      isLoadingMore,
-      rowVirtualizer.getVirtualItems(),
-    ]);
+    }, [hasMore, isLoadingMore, onLoadMore]);
 
-    console.log(updatedLeads);
-    console.log(missedFollowUps);
+    useEffect(() => {
+      if (!isLoadingMore) {
+        loadMoreCalledRef.current = false;
+      }
+    }, [isLoadingMore]);
+
+    useEffect(() => {
+      const container = scrollRef.current;
+      if (!container) return;
+
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
+    }, [handleScroll]);
 
     return (
       <div className="flex-shrink-0 w-[280px] rounded-lg bg-transparent">
         <div className="px-2 mb-5">
           <h3
             style={{
-              backgroundColor: status.meta.color_code
-                ? status.meta.color_code
-                : "gray",
+              backgroundColor: status.meta.color_code || "gray",
             }}
             className="font-semibold py-2 px-3 rounded text-white flex items-center"
           >
@@ -115,12 +128,12 @@ export const StatusColumn = memo(
                     height: `${virtualRow.size}px`,
                     transform: `translateY(${virtualRow.start}px)`,
                   }}
-                  className="flex flex-col justify-start pb-3" // added pb-3 to provide bottom padding within the virtual item
+                  className="flex flex-col justify-start pb-3"
                 >
                   {isLoaderRow ? (
                     hasMore ? (
                       <div className="flex items-center justify-center py-4">
-                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-400 border-t-transparent"></div>
+                        {/* Loading indicator */}
                       </div>
                     ) : (
                       <div className="flex items-center justify-center py-4">
@@ -130,7 +143,7 @@ export const StatusColumn = memo(
                       </div>
                     )
                   ) : (
-                    <div className="mb-2">
+                    <div className="mb-2 mt-4">
                       <LeadCard
                         lead={
                           updatedLeads?.find((l) => l._id === lead._id) || lead
